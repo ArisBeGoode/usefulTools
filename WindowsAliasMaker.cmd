@@ -6,37 +6,47 @@ SET c=0
 SET f=0
 SET u=
 SET h=0
+SET v=0
 
 :initial
-IF "%1"=="" GOTO done
-SET aux=%1
-IF "%aux:~0,1%"=="-" (
-   SET nome=%aux:~1,250%
-) ELSE (
-	IF "%aux:~0,1%"=="/" (
-		SET nome=%aux:~1,250%
-	) ELSE (
-		IF "%nome%"=="f" (
-			SET f=1
-		)
-		IF "%nome%"=="c" (
-			SET c=1
-		)
-		IF "%nome%"=="h" (
-			SET h=1
-		)
-		IF "%nome%"=="u" (
-			SET u=%1
-		) ELSE (
-			ECHO "%nome%" is not a valid parameter
-			ECHO ...
-			PAUSE > NUL
-			GOTO done
-		)
-	)
+IF "%1"=="" GOTO start
+SET aux=%1:^/=-%
+IF "%1"=="-f" (
+    SET f=1
+    SHIFT
+    GOTO initial
 )
-SHIFT
-GOTO initial
+IF "%1"=="-c" (
+    SET c=1
+    SHIFT
+    GOTO initial 
+)
+IF "%1"=="-h" (
+    SET h=1
+    SHIFT
+    GOTO initial
+)
+IF "%1"=="-?" (
+    SET h=1
+    SHIFT
+    GOTO initial
+)
+IF "%1"=="-v" (
+    SET v=1
+    SHIFT
+    GOTO initial
+)
+IF "%1"=="-u" (
+    SET u=%2
+    SHIFT
+    SHIFT
+    GOTO initial 
+)
+ECHO "%1" is not a valid parameter. Breaking now.
+ECHO ...
+SET ERRORLEVEL=45
+PAUSE > NUL
+GOTO done
 
 :: parameter checking
 
@@ -47,7 +57,7 @@ IF "%u%"==""(
 	GOTO user
 )
 IF %c%+%f%+%h% > 1(
-	ECHO You entered non-combinable parameters (so more than one non-u param)
+	ECHO You entered non-combinable parameters (so more than one non-u and non-v param)
 	ECHO ...
 	PAUSE > NUL
 	GOTO done
@@ -74,7 +84,7 @@ GOTO done
 
 :user
 
-:: use df user than running user for %userprofile%
+:: use given user than running user for %userprofile%
 
 SET USERPROFILE=C:\users\%u%
 GOTO start
@@ -171,9 +181,11 @@ GOTO done
 
 :: display help page
 
-ECHO -f forces, so overrides everything and SETs defaults
-ECHO -c checks, so does nothing but tell you whether the correct files are found
-ECHO -u uses a dIFferent user so IF you run-as-admin for regedit purposes, provide -u ^<your-username^> here pls
+ECHO -f forces, so overrides everything and sets defaults - be careful!
+ECHO -c checks, so does nothing but tell you whether the correct files are found - contents notwithstanding 
+ECHO -u uses a different user so if you run-as-admin for regedit purposes, provide -u ^<your-username^> here pls
+ECHO -v is the verbose flag which right now does jack-all
+ECHI -h shows this help page
 ECHO ...
 PAUSE > NUL
 GOTO done
