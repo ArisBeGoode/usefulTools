@@ -11,32 +11,32 @@ SET v=0
 :initial
 IF "%1"=="" GOTO start
 SET aux=%1:^/=-%
-IF "%1"=="-f" (
+IF "%aux%"=="-f" (
     SET f=1
     SHIFT
     GOTO initial
 )
-IF "%1"=="-c" (
+IF "%aux%"=="-c" (
     SET c=1
     SHIFT
     GOTO initial 
 )
-IF "%1"=="-h" (
+IF "%aux%"=="-h" (
     SET h=1
     SHIFT
     GOTO initial
 )
-IF "%1"=="-?" (
+IF "%aux%"=="-?" (
     SET h=1
     SHIFT
     GOTO initial
 )
-IF "%1"=="-v" (
+IF "%aux%"=="-v" (
     SET v=1
     SHIFT
     GOTO initial
 )
-IF "%1"=="-u" (
+IF "%aux%"=="-u" (
     SET u=%2
     SHIFT
     SHIFT
@@ -87,6 +87,7 @@ GOTO done
 :: use given user than running user for %userprofile%
 
 SET USERPROFILE=C:\users\%u%
+SET u=
 GOTO start
 
 
@@ -124,7 +125,7 @@ GOTO done
 :error2
 :: file already exists so trouble yada yada
 SET ERRORLEVEL=2
-ECHO (one of) The file(s) we use was already existing so we're gonna break now cause no -f flag was specIFied. I can error messages.
+ECHO (one of) The file(s) we use was already existing so we're gonna break now cause no -f flag was specified. I can error messages.
 ECHO ...
 PAUSE > NUL
 GOTO done
@@ -196,7 +197,7 @@ GOTO done
 :done
 
 :: bye-bye
-DEL C:\temp\tmpfile.tmp >NUL 2>NUL
+DEL C:\temp\tmpfile.tmp >NUL 2>&1
 EXIT /b %ERRORLEVEL%
 
 
@@ -207,15 +208,14 @@ EXIT /b %ERRORLEVEL%
 
 :: alias.bat builder
 	ECHO @ECHO OFF >> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
+	ECHO.>> C:\Temp\alias.bat
 	ECHO :: PATH fuckery >> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
-	ECHO SET PATH=%PATH%;%userprofile%\bin >> C:\Temp\alias.bat
-	SET PATH=%PATH%;C:\Windows\system32\OpenSSH
+	ECHO.>> C:\Temp\alias.bat
+	ECHO SET PATH=^%PATH^%;^%userprofile^%\bin >> C:\Temp\alias.bat
 	ECHO 	:: Cause for some reason I can install ssh without issue, but it never gets added to path >> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
+	ECHO.>> C:\Temp\alias.bat
 	ECHO :: Commands >> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
+	ECHO.>> C:\Temp\alias.bat
 	ECHO DOSKEY ls=dir /Q $* >> C:\Temp\alias.bat
 	ECHO DOSKEY alias="C:\Program Files\Notepad++\Notepad++.exe" C:\Temp\alias.bat >> C:\Temp\alias.bat
 	ECHO DOSKEY npp="C:\Program Files\Notepad++\Notepad++.exe" $* >> C:\Temp\alias.bat
@@ -223,17 +223,17 @@ EXIT /b %ERRORLEVEL%
 	ECHO DOSKEY bye=exit >> C:\Temp\alias.bat
 	ECHO DOSKEY IFconfig=ipconfig /all >> C:\Temp\alias.bat
 	ECHO DOSKEY cat=type $* >> C:\Temp\alias.bat
-	ECHO DOSKEY touch=type NUL >> $* >> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
+	ECHO DOSKEY touch=type NUL ^>> $* >> C:\Temp\alias.bat
+	ECHO.>> C:\Temp\alias.bat
+	ECHO.>> C:\Temp\alias.bat
 	ECHO :: Cause I want cmd to start in C:\ >> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
+	ECHO.>> C:\Temp\alias.bat
 	ECHO C: >> C:\Temp\alias.bat
-	ECHO .>> C:\Temp\alias.bat
+	ECHO.>> C:\Temp\alias.bat
 :: grep.cmd builder
 	ECHO @ECHO OFF >> %userprofile%\bin\grep.cmd
-	ECHO findstr /i %1 >> %userprofile%\bin\grep.cmd
+	ECHO findstr /i ^%1 >> %userprofile%\bin\grep.cmd
 :: man.cmd builder
 	ECHO @ECHO OFF >> %userprofile%\bin\man.cmd
-	ECHO %~1 /? ^| less >> %userprofile%\bin\man.cmd
+	ECHO ^%~1 /? ^| less >> %userprofile%\bin\man.cmd
 GOTO done
