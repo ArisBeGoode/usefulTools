@@ -9,7 +9,6 @@ SET h=0
 
 :initial
 IF "%1"=="" GOTO done
-echo              %1
 SET aux=%1
 IF "%aux:~0,1%"=="-" (
    SET nome=%aux:~1,250%
