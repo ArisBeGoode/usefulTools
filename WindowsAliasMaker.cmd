@@ -44,7 +44,7 @@ IF "%aux%"=="-u" (
     GOTO initial 
 )
 ECHO "%1" is not a valid parameter. Breaking now.
-ECHO abc
+ECHO ...
 SET ERRORLEVEL=45
 PAUSE > NUL
 GOTO done
@@ -53,27 +53,20 @@ GOTO done
 
 :start
 IF NOT "%u%"=="" GOTO user
-IF %c%+%f%+%h% gtr 1 (
+SET /a "sum=%c%+%f%+%h%"
+IF %sum% gtr 1 (
 	ECHO You entered non-combinable parameters, so more than one non-u and non-v param
-	ECHO def
+	ECHO ...
 	PAUSE > NUL
 	GOTO done
 )
-IF %c%==1 (
-	goto check
-)
-IF %f%==1 (
-	goto force
-)
-IF %h%==1 (
-	goto help
-)
-IF %c%+%f%+%h% == 0 (
-	goto blank
-)
+IF %c%==1 goto check
+IF %f%==1 goto force
+IF %h%==1 goto help
+IF %sum%==0 goto blank
 ECHO You reached code that should be unreachable. Err, contact the author, I guess?
 SET ERRORLEVEL=999
-ECHO dat
+ECHO ...
 PAUSE > NUL
 GOTO done
 
@@ -116,14 +109,14 @@ GOTO builders
 :: reg value already exists so we have trouble potentially.
 SET ERRORLEVEL=1
 ECHO The reg key value we use was already existing so we're gonna break now cause no -f flag was specified. I can error messages.
-ECHO wal
+ECHO ...
 PAUSE > NUL
 GOTO done
 :error2
 :: file already exists so trouble yada yada
 SET ERRORLEVEL=2
 ECHO (one of) The file(s) we use was already existing so we're gonna break now cause no -f flag was specified. I can error messages.
-ECHO iets
+ECHO ...
 PAUSE > NUL
 GOTO done
 
@@ -163,12 +156,12 @@ IF EXIST C:\Temp\alias.bat (ECHO check 2 okay) ELSE (GOTO nope)
 IF EXIST %userprofile%\bin\grep.cmd (ECHO check 3 okay) ELSE (GOTO nope)
 IF EXIST %userprofile%\bin\man.cmd (ECHO check 4 okay) ELSE (GOTO nope)
 ECHO All checks okay - note we didn't check contents of files, that's your responsibility.
-ECHO beh
+ECHO ...
 PAUSE > NUL
 GOTO done
 :nope
 ECHO Something's amiss - install is not success.
-ECHO durr
+ECHO ...
 PAUSE > NUL
 GOTO done
 
@@ -184,7 +177,7 @@ ECHO -c checks, so does nothing but tell you whether the correct files are found
 ECHO -u uses a different user so if you run-as-admin for regedit purposes, provide -u ^<your-username^> here pls
 ECHO -v is the verbose flag which right now does jack-all
 ECHO -h shows this help page
-ECHO urgh
+ECHO ...
 PAUSE > NUL
 GOTO done
 
