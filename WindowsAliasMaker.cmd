@@ -10,7 +10,8 @@ SET v=0
 
 :initial
 IF "%1"=="" GOTO start
-SET aux=%1:^/=-%
+SET aux=%1
+SET aux=%aux:/=-%
 IF "%aux%"=="-f" (
     SET f=1
     SHIFT
@@ -43,7 +44,7 @@ IF "%aux%"=="-u" (
     GOTO initial 
 )
 ECHO "%1" is not a valid parameter. Breaking now.
-ECHO ...
+ECHO abc
 SET ERRORLEVEL=45
 PAUSE > NUL
 GOTO done
@@ -51,32 +52,28 @@ GOTO done
 :: parameter checking
 
 :start
-IF "%u%"==""(
-	:: no special user needed
-) ELSE (
-	GOTO user
-)
-IF %c%+%f%+%h% > 1(
-	ECHO You entered non-combinable parameters (so more than one non-u and non-v param)
-	ECHO ...
+IF NOT "%u%"=="" GOTO user
+IF %c%+%f%+%h% gtr 1 (
+	ECHO You entered non-combinable parameters, so more than one non-u and non-v param
+	ECHO def
 	PAUSE > NUL
 	GOTO done
 )
-IF %c%==1(
+IF %c%==1 (
 	goto check
 )
-IF %f%==1(
+IF %f%==1 (
 	goto force
 )
-IF %h%==1(
+IF %h%==1 (
 	goto help
 )
-IF %c%+%f%+%h% == 0(
+IF %c%+%f%+%h% == 0 (
 	goto blank
 )
 ECHO You reached code that should be unreachable. Err, contact the author, I guess?
 SET ERRORLEVEL=999
-ECHO ...
+ECHO dat
 PAUSE > NUL
 GOTO done
 
@@ -119,14 +116,14 @@ GOTO builders
 :: reg value already exists so we have trouble potentially.
 SET ERRORLEVEL=1
 ECHO The reg key value we use was already existing so we're gonna break now cause no -f flag was specified. I can error messages.
-ECHO ...
+ECHO wal
 PAUSE > NUL
 GOTO done
 :error2
 :: file already exists so trouble yada yada
 SET ERRORLEVEL=2
 ECHO (one of) The file(s) we use was already existing so we're gonna break now cause no -f flag was specified. I can error messages.
-ECHO ...
+ECHO iets
 PAUSE > NUL
 GOTO done
 
@@ -166,12 +163,12 @@ IF EXIST C:\Temp\alias.bat (ECHO check 2 okay) ELSE (GOTO nope)
 IF EXIST %userprofile%\bin\grep.cmd (ECHO check 3 okay) ELSE (GOTO nope)
 IF EXIST %userprofile%\bin\man.cmd (ECHO check 4 okay) ELSE (GOTO nope)
 ECHO All checks okay - note we didn't check contents of files, that's your responsibility.
-ECHO ...
+ECHO beh
 PAUSE > NUL
 GOTO done
 :nope
 ECHO Something's amiss - install is not success.
-ECHO ...
+ECHO durr
 PAUSE > NUL
 GOTO done
 
@@ -186,8 +183,8 @@ ECHO -f forces, so overrides everything and sets defaults - be careful!
 ECHO -c checks, so does nothing but tell you whether the correct files are found - contents notwithstanding 
 ECHO -u uses a different user so if you run-as-admin for regedit purposes, provide -u ^<your-username^> here pls
 ECHO -v is the verbose flag which right now does jack-all
-ECHI -h shows this help page
-ECHO ...
+ECHO -h shows this help page
+ECHO urgh
 PAUSE > NUL
 GOTO done
 
@@ -211,8 +208,7 @@ EXIT /b %ERRORLEVEL%
 	ECHO.>> C:\Temp\alias.bat
 	ECHO :: PATH fuckery >> C:\Temp\alias.bat
 	ECHO.>> C:\Temp\alias.bat
-	ECHO SET PATH=^%PATH^%;^%userprofile^%\bin >> C:\Temp\alias.bat
-	ECHO 	:: Cause for some reason I can install ssh without issue, but it never gets added to path >> C:\Temp\alias.bat
+	ECHO SET PATH=%%PATH%%;%%userprofile%%\bin >> C:\Temp\alias.bat
 	ECHO.>> C:\Temp\alias.bat
 	ECHO :: Commands >> C:\Temp\alias.bat
 	ECHO.>> C:\Temp\alias.bat
@@ -221,9 +217,9 @@ EXIT /b %ERRORLEVEL%
 	ECHO DOSKEY npp="C:\Program Files\Notepad++\Notepad++.exe" $* >> C:\Temp\alias.bat
 	ECHO DOSKEY pingy=ping /t $* >> C:\Temp\alias.bat
 	ECHO DOSKEY bye=exit >> C:\Temp\alias.bat
-	ECHO DOSKEY IFconfig=ipconfig /all >> C:\Temp\alias.bat
+	ECHO DOSKEY ifconfig=ipconfig /all >> C:\Temp\alias.bat
 	ECHO DOSKEY cat=type $* >> C:\Temp\alias.bat
-	ECHO DOSKEY touch=type NUL ^>> $* >> C:\Temp\alias.bat
+	ECHO DOSKEY touch=type NUL ^^^>^^^> $* >> C:\Temp\alias.bat
 	ECHO.>> C:\Temp\alias.bat
 	ECHO.>> C:\Temp\alias.bat
 	ECHO :: Cause I want cmd to start in C:\ >> C:\Temp\alias.bat
@@ -232,8 +228,10 @@ EXIT /b %ERRORLEVEL%
 	ECHO.>> C:\Temp\alias.bat
 :: grep.cmd builder
 	ECHO @ECHO OFF >> %userprofile%\bin\grep.cmd
-	ECHO findstr /i ^%1 >> %userprofile%\bin\grep.cmd
+	ECHO.>> %userprofile%\bin\grep.cmd
+	ECHO findstr /i %%1 >> %userprofile%\bin\grep.cmd
 :: man.cmd builder
 	ECHO @ECHO OFF >> %userprofile%\bin\man.cmd
-	ECHO ^%~1 /? ^| less >> %userprofile%\bin\man.cmd
+	ECHO.>> %userprofile%\bin\man.cmd
+	ECHO %%~1 /? ^| less >> %userprofile%\bin\man.cmd
 GOTO done
